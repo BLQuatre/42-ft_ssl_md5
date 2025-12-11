@@ -1,0 +1,10 @@
+/ft_ssl
+
+.vscode/
+objs/
+
+.tests/
+
+*.o
+*.a
+*.out
