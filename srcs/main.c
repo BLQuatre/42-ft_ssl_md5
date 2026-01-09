@@ -2,13 +2,20 @@
 #include "ft_ssl_md5.h"
 
 int main(int argc, char **argv) {
-	(void) argc;
-	(void) argv;
+	if (argc < 2) {
+		ft_write(STDOUT_FILENO, "usage: ");
+		ft_write(STDOUT_FILENO, basename(argv[0]));
+		ft_write(STDOUT_FILENO, " command [flags] [file/string]\n");
+		return EXIT_SUCCESS;
+	}
 
-	// if (argc < 2) {
-	// 	write(0, "usage: ft_ssl command [flags] [file/string]\n", 45);
-	// 	return 0;
-	// }
+	if (ft_strncmp(argv[1], "md5", 4) && ft_strncmp(argv[1], "sha256", 7)) {
+		ft_write(STDOUT_FILENO, basename(argv[0]));
+		ft_write(STDOUT_FILENO, ": Error: '");
+		ft_write(STDOUT_FILENO, argv[1]);
+		ft_write(STDOUT_FILENO, "' is an invalid command.\n\nCommands:\nmd5\nsha256\n\nFlags:\n-p -q -r -s\n");
+		return EXIT_FAILURE;
+	}
 
 	size_t padded_len_bytes;
 	const char *original_msg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."; // Message de test
