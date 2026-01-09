@@ -1,14 +1,21 @@
 NAME		= ft_ssl
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -MMD
 
 INC_DIR		= includes
-INC_FLAGS	= -I$(INC_DIR)
-
 SRCS_DIR	= srcs
 OBJS_DIR	= objs
-SRCS = $(wildcard $(SRCS_DIR)/*.c)
-OBJS = $(patsubst $(SRCS_DIR)/%.c,$(OBJS_DIR)/%.o,$(SRCS))
+
+FILES		= main.c \
+			  utils.c \
+			  dev.c \
+			  md5/md5_main.c \
+			  md5/md5_process.c
+
+SRCS		= $(addprefix $(SRCS_DIR)/, $(FILES))
+
+OBJS		= $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
+DEPS		= $(OBJS:.o=.d)
 
 GREEN		= \033[0;32m
 CYAN		= \033[0;36m
@@ -20,22 +27,17 @@ INFO		= $(CYAN)[INFO]$(RESET)
 
 all: $(NAME)
 
-$(OBJS_DIR):
-	@if [ ! -d ./$(OBJS_DIR) ]; then \
-		echo "$(INFO) Creating $(OBJS_DIR) directory..."; \
-		echo "$(GRAY)mkdir -p $(OBJS_DIR)"; \
-		mkdir -p $(OBJS_DIR); \
-	fi
-
-$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c | $(OBJS_DIR)
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	mkdir -p $(dir $@)
 	@echo "$(INFO) Compiling $<...$(GRAY)"
-	$(CC) $(WIN_SIZE) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
 $(NAME): $(OBJS)
 	@echo "$(INFO) Compiling $(NAME)...$(GRAY)"
-	$(CC) $(CFLAGS) $(INC_FLAGS) $(OBJS) ${LFLAGS} -o $@
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 	@echo "$(SUCCESS) $(NAME) compiled."
+
+-include $(DEPS)
 
 clean:
 	@echo "$(INFO) Removing object files...$(GRAY)"
