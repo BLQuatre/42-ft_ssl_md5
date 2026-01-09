@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	// }
 
 	size_t padded_len_bytes;
-	const char *original_msg = "Coucou les amis, coucou les amis, coucou les amis, coucou"; // Message de test
+	const char *original_msg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."; // Message de test
 	size_t original_len = ft_strlen(original_msg);
 
 	unsigned char *padded_msg = md5_pad((const unsigned char*)original_msg, original_len, &padded_len_bytes);
@@ -24,26 +24,28 @@ int main(int argc, char **argv) {
 	printf("Message original: %lu octets, %lu bits\n", original_len, original_len * 8);
 	printf("Message rempli: %lu octets, %lu bits\n", padded_len_bytes, padded_len_bytes * 8);
 	printf("--- Message Rempli (Hex) ---\n");
-	print_hex_dump(padded_msg, padded_len_bytes, CHUNK_SIZE);
+	print_hex_dump(padded_msg, padded_len_bytes, 16);
 
-	unsigned char **chunks = ft_split_chunks(padded_msg, padded_len_bytes, CHUNK_SIZE);
-	if (!chunks) {
+	if (padded_len_bytes % CHUNK_SIZE != 0) {
 		free(padded_msg);
 		ft_write(STDERR_FILENO, ERR_SPLIT_CHUNKS);
 		return EXIT_FAILURE;
 	}
 
 	printf("Chunks:\n");
-	int i = 0;
+	size_t chunks_amount = padded_len_bytes / CHUNK_SIZE;
 
-	while (chunks[i]) {
-		printf("chunks[%d] = ", i);
-		print_hex_dump(chunks[i], CHUNK_SIZE, CHUNK_SIZE);
-		i++;
+	unsigned char chunk[CHUNK_SIZE];
+	for (size_t i = 0; i < chunks_amount; i++) {
+		for (size_t j = 0; j < CHUNK_SIZE; j++) {
+			chunk[j] = (padded_msg + (i * CHUNK_SIZE))[j];
+		}
+
+		printf("chunk %zu: ", i);
+		print_hex_dump(chunk, CHUNK_SIZE, CHUNK_SIZE);
 	}
 
 	free(padded_msg);
-	free(chunks);
 
 	return EXIT_SUCCESS;
 }
