@@ -38,3 +38,9 @@ int ft_strncmp(const char *s1, const char *s2, size_t n) {
 	}
 	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
+
+void ft_reverse(unsigned char *str, size_t n) {
+	for (size_t i = 0; i < n / 2; i++) {
+		str[i] = str[n - i - 1];
+	}
+}
