@@ -1,7 +1,25 @@
 #include "ft_ssl.h"
 #include "ft_ssl_md5.h"
+#include "get_next_line.h"
 
-int main(int argc, char **argv) {
+char *read_stdin(void)
+{
+	char *line;
+	char *result;
+	char *tmp;
+
+	result = ft_strdup("");
+	while ((line = get_next_line(STDIN_FILENO)) != NULL) {
+		tmp = ft_strjoin(result, line);
+		free(result);
+		free(line);
+		result = tmp;
+	}
+	return result;
+}
+
+int main(int argc, char **argv)
+{
 	if (argc < 2) {
 		ft_write(STDOUT_FILENO, "usage: ");
 		ft_write(STDOUT_FILENO, basename(argv[0]));
@@ -17,7 +35,11 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	// unsigned char result[16];
+	char *input = read_stdin();
+	unsigned char result[16];
+
+	md5_compute((const unsigned char*)input, ft_strlen(input), result);
+	md5_print(input, result);
 
 	// const char *test1 = "";
 	// md5_compute((const unsigned char*)test1, ft_strlen(test1), result);

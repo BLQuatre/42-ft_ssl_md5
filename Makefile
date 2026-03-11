@@ -7,7 +7,8 @@ SRCS_DIR	= srcs
 OBJS_DIR	= objs
 
 FILES		= main.c \
-			  utils.c \
+			  utils/gnl.c \
+			  utils/ft.c \
 			  dev.c \
 			  md5/md5_main.c \
 			  md5/md5_process.c

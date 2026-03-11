@@ -10,6 +10,10 @@ void *ft_memcpy(void *dest, const void *src, size_t n);
 void ft_write(int fd, char *msg);
 int ft_strncmp(const char *s1, const char *s2, size_t n);
 void ft_reverse(unsigned char *str, size_t n);
+char *ft_strdup(const char *s1);
+char *ft_strjoin(const char *s1, const char *s2);
+void *ft_calloc(size_t nmemb, size_t size);
+char *ft_strchr(const char *s, int c);
 
 // TEMP DEV
 # include <stdio.h>
