@@ -7,32 +7,31 @@ void md5_init(t_md5_context *ctx) {
 	ctx->D = 0x10325476;
 }
 
-unsigned char *md5_pad(const unsigned char *msg, size_t len_bytes, size_t *padded_len_bytes) {
-	size_t len_bits = len_bytes * 8;
+void md5_compute(const unsigned char *msg, size_t len_bytes, unsigned char result[16]) {
+	t_md5_context ctx;
+	size_t padded_len_bytes;
 
-	size_t total_len = len_bytes + 1 + 8;
-	while (total_len % 64 != 0) {
-		total_len++;
-	}
-	*padded_len_bytes = total_len;
+	md5_init(&ctx);
 
-	unsigned char *padded_msg = (unsigned char *) malloc(sizeof(unsigned char) * total_len);
+	unsigned char *padded_msg = md5_pad(msg, len_bytes, &padded_len_bytes);
 	if (!padded_msg) {
-		return NULL;
-	};
-
-	ft_memcpy(padded_msg, msg, len_bytes);
-
-	padded_msg[len_bytes] = 0x80;
-
-	for (size_t i = len_bytes + 1; i < total_len - 8; i++) {
-		padded_msg[i] = 0x00;
+		return;
 	}
 
-	unsigned char *length_field = padded_msg + (total_len - 8);
-	for (int i = 0; i < 8; i++) {
-		length_field[i] = (unsigned char)((len_bits >> (i * 8)) & 0xFF);
+	size_t chunks_amount = padded_len_bytes / CHUNK_SIZE;
+	for (size_t i = 0; i < chunks_amount; i++) {
+		md5_transform(&ctx, padded_msg + (i * CHUNK_SIZE));
 	}
 
-	return padded_msg;
+	md5_finalize(&ctx, result);
+
+	free(padded_msg);
+}
+
+void md5_print(const char *input, const unsigned char digest[16]) {
+	printf("MD5(\"%s\") = ", input);
+	for (int i = 0; i < 16; i++) {
+		printf("%02x", digest[i]);
+	}
+	printf("\n");
 }

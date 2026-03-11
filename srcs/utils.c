@@ -40,7 +40,13 @@ int ft_strncmp(const char *s1, const char *s2, size_t n) {
 }
 
 void ft_reverse(unsigned char *str, size_t n) {
+	if (n == 0) {
+		return;
+	}
+
 	for (size_t i = 0; i < n / 2; i++) {
+		unsigned char tmp = str[i];
 		str[i] = str[n - i - 1];
+		str[n - i - 1] = tmp;
 	}
 }

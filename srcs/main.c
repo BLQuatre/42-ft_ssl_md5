@@ -17,42 +17,23 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	size_t padded_len_bytes;
-	const char *original_msg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."; // Message de test
-	size_t original_len = ft_strlen(original_msg);
+	// unsigned char result[16];
 
-	unsigned char *padded_msg = md5_pad((const unsigned char*)original_msg, original_len, &padded_len_bytes);
-	if (!padded_msg) {
-		ft_write(STDERR_FILENO, ERR_PADDING);
-		return EXIT_FAILURE;
-	}
+	// const char *test1 = "";
+	// md5_compute((const unsigned char*)test1, ft_strlen(test1), result);
+	// md5_print(test1, result);
 
-	printf("Message: %s\n", original_msg);
-	printf("Message original: %lu octets, %lu bits\n", original_len, original_len * 8);
-	printf("Message rempli: %lu octets, %lu bits\n", padded_len_bytes, padded_len_bytes * 8);
-	printf("--- Message Rempli (Hex) ---\n");
-	print_hex_dump(padded_msg, padded_len_bytes, 16);
+	// const char *test2 = "a";
+	// md5_compute((const unsigned char*)test2, ft_strlen(test2), result);
+	// md5_print(test2, result);
 
-	if (padded_len_bytes % CHUNK_SIZE != 0) {
-		free(padded_msg);
-		ft_write(STDERR_FILENO, ERR_SPLIT_CHUNKS);
-		return EXIT_FAILURE;
-	}
+	// const char *test3 = "abc";
+	// md5_compute((const unsigned char*)test3, ft_strlen(test3), result);
+	// md5_print(test3, result);
 
-	printf("Chunks:\n");
-	size_t chunks_amount = padded_len_bytes / CHUNK_SIZE;
-
-	unsigned char chunk[CHUNK_SIZE];
-	for (size_t i = 0; i < chunks_amount; i++) {
-		for (size_t j = 0; j < CHUNK_SIZE; j++) {
-			chunk[j] = (padded_msg + (i * CHUNK_SIZE))[j];
-		}
-
-		printf("chunk %zu: ", i);
-		print_hex_dump(chunk, CHUNK_SIZE, CHUNK_SIZE);
-	}
-
-	free(padded_msg);
+	// const char *test4 = "message digest";
+	// md5_compute((const unsigned char*)test4, ft_strlen(test4), result);
+	// md5_print(test4, result);
 
 	return EXIT_SUCCESS;
 }
